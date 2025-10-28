@@ -9,11 +9,20 @@ torch.manual_seed(42)
 # recommended preprocessing steps: resize to square -> convert to tensor -> normalize the image
 # if you are resizing, 100 is a good choice otherwise GradeScope will time out
 # you could use Compose (https://pytorch.org/vision/stable/generated/torchvision.transforms.Compose.html) from transforms module to handle preprocessing more conveniently
-transform = torchvision.transforms.Compose()
+transform = torchvision.transforms.Compose(
+    [
+        torchvision.transforms.Resize((100, 100)),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize(
+            mean=[0.5, 0.5, 0.5],
+            std=[0.5, 0.5, 0.5]
+        )
+    ]
+)
 
 
 # thanks to torchvision, this is a convenient way to read images from folders directly without writing datasets class yourself (you should know what datasets class is as mentioned in the documentation)
-dataset = torchvision.datasets.ImageFolder()
+dataset = torchvision.datasets.ImageFolder(root="petimages", transform=transform)
 
 
 # now we need to split the data into training set and evaluation set 
